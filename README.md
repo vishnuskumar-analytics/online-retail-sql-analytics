@@ -1,4 +1,4 @@
-# Online Retail SQL Analytics (PostgreSQL)
+# Online Retail Revenue & Customer Segmentation Analysis (PostgreSQL)
 
 A business-focused PostgreSQL analytics project analyzing online retail transactional data to derive revenue KPIs and customer segmentation insights using RFM modeling.
 
