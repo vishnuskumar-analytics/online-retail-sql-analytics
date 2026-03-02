@@ -1,0 +1,12 @@
+# Ignore dataset files
+*.csv
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# optional outputs
+outputs/
