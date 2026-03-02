@@ -1,65 +1,145 @@
-<<<<<<< HEAD
-# online-retail-sql-analytics
-PostgreSQL project analyzing online retail transactional data with KPIs and RFM customer segmentation.
-=======
 # Online Retail SQL Analytics (PostgreSQL)
 
-## Overview
-This project analyzes an online retail transactions dataset using PostgreSQL.
-It includes a clean data layer, quality checks, core revenue KPIs, and RFM-based customer segmentation.
+A business-focused PostgreSQL analytics project analyzing online retail transactional data to derive revenue KPIs and customer segmentation insights using RFM modeling.
 
-## Tech Stack
+---
+
+## 🎯 Business Objective
+
+This project simulates an analytics workflow for an e-commerce company.
+
+Goals:
+- Measure core revenue KPIs
+- Identify high-value customers
+- Detect churn risk segments
+- Understand revenue contribution by customer segment
+
+The project demonstrates how raw transactional data can be transformed into actionable business insights using SQL.
+
+---
+
+## 🏗 Project Workflow
+
+The analysis follows a structured analytics pipeline:
+
+1. *Data Validation*
+2. *Data Cleaning (Analytical Layer Creation)*
+3. *KPI Computation*
+4. *Customer Segmentation (RFM)*
+5. *Segment Revenue Contribution Analysis*
+
+---
+
+## 🛠 Tech Stack
+
 - PostgreSQL
 - psql (CLI)
-- SQL (CTEs, window functions, views)
+- SQL
+  - CTEs
+  - Window Functions (NTILE)
+  - Aggregations
+  - Views
+  - CASE logic
 
-## Dataset
-Online retail transactional data with fields like:
-invoice, stockcode, description, quantity, invoicedate, price, customer_id, country
+---
 
-> Note: The raw dataset file is not included in this repo.
+## 📊 Dataset
 
-## Project Structure
-- sql/00_project_setup.sql — database validation + row counts
-- sql/01_data_quality_checks.sql — null checks, negative checks, date ranges
-- sql/02_build_clean_table.sql — creates online_retail_clean
-- sql/03_business_analysis.sql — KPIs + RFM segmentation + segment contribution
+Online retail transactional dataset with fields such as:
 
-## Cleaning Logic (Clean Layer)
-Created online_retail_clean by keeping only:
+- Invoice
+- StockCode
+- Description
+- Quantity
+- InvoiceDate
+- Price
+- Customer_ID
+- Country
+
+> Note: The raw dataset file is intentionally excluded from this repository.
+
+---
+
+## 🧹 Data Cleaning Strategy
+
+A clean analytical table (online_retail_clean) is built using strict validation rules:
+
 - customer_id IS NOT NULL
 - quantity > 0
 - price > 0
 
-This removes anonymous customers, returns, and invalid pricing.
+This removes:
+- Anonymous transactions
+- Returns
+- Invalid pricing entries
 
-## Key Analyses
-### Revenue KPIs
-- Total revenue
-- Revenue by country
-- Monthly revenue trend
-- Top products by revenue (excluding operational codes)
-- Top customers by revenue
+This ensures that KPIs and segmentation are based only on valid commercial transactions.
 
-### RFM Segmentation
-Built rfm_segmented view with:
-- Recency (days since last purchase)
-- Frequency (# distinct invoices)
-- Monetary (total spend)
+---
 
-Scoring:
-- quintiles using NTILE(5)
-- total score = r_score + f_score + m_score
+## 📈 Revenue KPIs Computed
 
-Segments:
-- Champions (>=14)
-- Loyal Customers (>=12)
-- Potential Loyalists (>=10)
-- At Risk (>=7)
-- Lost (else)
+- Total Revenue
+- Revenue by Country
+- Monthly Revenue Trend
+- Top Products by Revenue
+- Top Customers by Revenue
+- Segment Revenue Contribution
 
-## How to Run
-1) Start psql and connect to your DB:
-```sql
-psql -d purpose -U pg4e
->>>>>>> bd03da0 (Initial commit)
+These KPIs simulate what a business dashboard would require for decision-making.
+
+---
+
+## 🧠 RFM Customer Segmentation
+
+RFM metrics are calculated per customer:
+
+- *Recency* → Days since last purchase  
+- *Frequency* → Number of distinct invoices  
+- *Monetary* → Total customer spend  
+
+Scoring Method:
+- Quintile scoring using NTILE(5)
+- Recency score inverted using (6 - r_raw) so higher score = more recent
+- Composite logic applied using behavioral conditions
+
+---
+
+### 🏷 Segment Definitions
+
+Segments are assigned using rule-based conditions:
+
+- *Champions*  
+  r_score >= 4 AND f_score >= 4 AND m_score >= 4
+
+- *Loyal Customers*  
+  r_score >= 3 AND f_score >= 3
+
+- *Potential Loyalists*  
+  r_score >= 3
+
+- *At Risk*  
+  r_score <= 2 AND f_score >= 3
+
+- *Lost*  
+  All remaining customers
+
+This prioritizes recency while incorporating purchasing intensity and value.
+
+---
+
+## 📂 Project Structure
+
+- sql/00_project_setup.sql → Validation & record counts  
+- sql/01_data_quality_checks.sql → Null & anomaly checks  
+- sql/02_build_clean_table.sql → Clean analytical table  
+- sql/03_business_analysis.sql → KPI analysis & RFM segmentation  
+
+---
+
+## 🚀 How to Run
+
+Connect to PostgreSQL:
+
+```bash
+psql -d <database_name> -U <username>
